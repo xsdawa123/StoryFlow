@@ -1,0 +1,30 @@
+# 服务基础配置（ECS公网：39.105.112.239:8080）
+server:
+  port: 8080
+  mode: debug
+
+# 阿里云RDS真实配置
+mysql:
+  host: rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com
+  port: 3306
+  username: User1111
+  password: 'User1111'
+  dbname: db_story2video
+  charset: utf8mb4
+  max_idle_conns: 10
+  max_open_conns: 50
+  conn_max_lifetime: 1800
+
+# AI Server真实配置
+ai_server:
+  base_url: http://127.0.0.1:7500
+  timeout: 300
+
+# 日志配置
+logger:
+  level: info
+  filename: "logs/story2video.log"
+  max_size: 100
+  max_backup: 10
+  max_age: 7
+  compress: true

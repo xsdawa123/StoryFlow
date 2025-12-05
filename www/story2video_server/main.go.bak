@@ -1,0 +1,55 @@
+package main
+
+import (
+"story2video_server/config"
+"story2video_server/handler"
+"story2video_server/utils"
+"github.com/gin-gonic/gin"
+"go.uber.org/zap"
+)
+
+func main() {
+// 1. 初始化日志（正确写法：直接调用，无返回值，不赋值）
+utils.InitLogger()
+
+// 2. 初始化全局配置（含数据库连接）
+config.InitConfig()
+
+// 3. 初始化Gin引擎
+r := gin.Default()
+
+// 4. 注册路由（匹配你的项目接口）
+// 客户端接口
+// 客户端接口 - 故事相关
+r.POST("/api/client/story/generate", handler.GenerateStory)          // 生成故事
+r.GET("/api/client/story/result", handler.QueryStoryResult)          // 查询故事结果
+r.POST("/api/client/story/regenerate", handler.StoryRegenerate)      // 重新生成故事（按需扩展）
+
+// 客户端接口 - 图片相关
+r.POST("/api/client/image/generate", handler.GenerateImage)          // 生成图片
+r.GET("/api/client/image/result", handler.QueryImageResult)          // 查询图片结果
+r.POST("/api/client/image/regenerate", handler.RegenerateImage)      // 重新生成图片（之前缺失的核心路由）
+
+// 客户端接口 - 视频相关
+r.POST("/api/client/video/generate", handler.GenerateVideo)          // 生成视频
+r.GET("/api/client/video/result", handler.QueryVideoResult)          // 查询视频结果
+r.POST("/api/client/video/regenerate", handler.VideoRegenerate)      // 重新生成视频（按需扩展）
+
+// 客户端接口 - 项目相关
+r.GET("/api/client/project/list", handler.QueryProjectList)          // 查询项目列表
+r.POST("/api/client/project/delete", handler.DeleteProject)          // 删除项目
+r.POST("/api/client/project/update", handler.UpdateProject)          // 项目信息更新（按需扩展）
+
+// 回调接口（已完整，保留）
+r.POST("/api/callback/story", handler.StoryCallback)
+r.POST("/api/callback/image", handler.ImageCallback)
+r.POST("/api/callback/video", handler.VideoCallback)
+
+
+// 5. 启动服务
+utils.Logger.Info("服务启动成功，监听端口：8080")
+err := r.Run(":8080") // 监听8080端口
+if err != nil {
+utils.Logger.Fatal("服务启动失败", zap.Error(err))
+}
+}

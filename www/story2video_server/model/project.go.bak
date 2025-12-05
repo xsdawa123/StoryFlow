@@ -1,0 +1,17 @@
+package model
+
+import "time"
+
+// Project 严格映射RDS的projects表结构
+type Project struct {
+ProjectID     string    `gorm:"column:project_id;primaryKey;type:varchar(64);not null" json:"project_id"`
+RawStory      string    `gorm:"column:raw_story;type:text;not null" json:"raw_story"`
+Style         string    `gorm:"column:style;type:varchar(32);not null" json:"style"`
+ProjectStatus string    `gorm:"column:project_status;type:varchar(32);not null" json:"project_status"`
+CreateTime    time.Time `gorm:"column:create_time;type:datetime;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
+}
+
+// TableName 强制指定表名，避免GORM自动复数化错误
+func (Project) TableName() string {
+return "projects"
+}

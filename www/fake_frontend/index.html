@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>链路测试平台（假前端）</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { padding: 20px; font-family: Arial, sans-serif; }
+        .test-group { margin: 20px 0; padding: 20px; border: 1px solid #eee; border-radius: 8px; }
+        button { 
+            padding: 10px 20px; margin: 10px 5px; 
+            background: #409eff; color: white; border: none; border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover { background: #66b1ff; }
+        #log { 
+            margin-top: 20px; padding: 10px; 
+            border: 1px solid #eee; border-radius: 4px;
+            height: 300px; overflow-y: auto; font-size: 14px;
+        }
+        .success { color: #67c23a; }
+        .error { color: #f56c6c; }
+        .info { color: #909399; }
+    </style>
+</head>
+<body>
+    <h1>Story2Video 链路测试平台</h1>
+    
+    <!-- 分镜测试组 -->
+    <div class="test-group">
+        <h3>📸 分镜相关测试</h3>
+        <button onclick="testStoryGenerate()">生成分镜</button>
+        <button onclick="testStoryQuery()">查询分镜结果</button>
+    </div>
+
+    <!-- 图片测试组 -->
+    <div class="test-group">
+        <h3>🖼️ 图片相关测试</h3>
+        <button onclick="testImageGenerate()">生成图片</button>
+        <button onclick="testImageQuery()">查询图片结果</button>
+    </div>
+
+    <!-- 视频测试组 -->
+    <div class="test-group">
+        <h3>🎬 视频相关测试</h3>
+        <button onclick="testVideoGenerate()">生成视频</button>
+        <button onclick="testVideoQuery()">查询视频结果</button>
+    </div>
+
+    <!-- 项目管理测试组 -->
+    <div class="test-group">
+        <h3>📋 项目管理测试</h3>
+        <button onclick="testProjectList()">查询项目列表</button>
+        <button onclick="testProjectDelete()">删除测试项目</button>
+    </div>
+
+    <!-- 日志输出 -->
+    <h3>📝 测试日志</h3>
+    <div id="log"></div>
+
+    <script>
+        // Go服务器地址（服务器环境替换为ECS公网IP，本地用39.105.112.239）
+        const GO_SERVER_BASE_URL = "http://39.105.112.239:8080/api/client";
+        // 假AI Server地址
+        const FAKE_AI_SERVER_URL = "http://39.105.112.239:8081/api/ai";
+
+        // 全局变量存储任务ID
+        let storyTaskId = "";
+        let imageTaskId = "";
+        let videoTaskId = "";
+
+        // 日志输出函数
+        function log(msg, type = "info") {
+            const logDiv = document.getElementById("log");
+            const time = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<div class="${type}">[${time}] ${msg}</div>`;
+            logDiv.scrollTop = logDiv.scrollHeight; // 滚动到底部
+        }
+        // 通用请求函数
+        async function request(url, method = "GET", data = {}) {
+            try {
+                const options = {
+                    method,
+                    headers: { "Content-Type": "application/json" },
+                };
+                if (method !== "GET") options.body = JSON.stringify(data);
+                
+                const response = await fetch(url, options);
+                const result = await response.json();
+                return { success: true, data: result };
+            } catch (error) {
+                return { success: false, error: error.message };
+            }
+        }
+
+        // ---------------------- 分镜测试 ----------------------
+        async function testStoryGenerate() {
+            log("开始测试：生成分镜");
+            const params = { project_id: "test_proj_001", content: "清晨森林，小鹿散步" };
+            
+            // 调用Go服务器生成分镜接口
+            const res = await request(`${GO_SERVER_BASE_URL}/story/generate`, "POST", params);
+            if (res.success) {
+                storyTaskId = res.data.data.task_id;
+                log(`✅ 生成分镜请求成功，任务ID：${storyTaskId}`, "success");
+                log(`🔄 假AI Server将在2秒后回调Go服务器`, "info");
+                
+                // 同步调用假AI Server（模拟Go服务器调用AI）
+                await request(`${FAKE_AI_SERVER_URL}/generate/story`, "POST", {
+                    task_id: storyTaskId,
+                    content: params.content
+                });
+            } else {
+                log(`❌ 生成分镜请求失败：${res.error}`, "error");
+            }
+        }
+
+        async function testStoryQuery() {
+            if (!storyTaskId) {
+                log("❌ 请先生成分镜获取任务ID", "error");
+                return;
+            }
+            log(`开始测试：查询分镜结果（任务ID：${storyTaskId}）`);
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/story/result?task_id=${storyTaskId}`);
+            if (res.success) {
+                log(`✅ 查询分镜结果成功：${JSON.stringify(res.data)}`, "success");
+            } else {
+                log(`❌ 查询分镜结果失败：${res.error}`, "error");
+            }
+        }
+
+        // ---------------------- 图片测试 ----------------------
+        async function testImageGenerate() {
+            if (!storyTaskId) {
+                log("❌ 请先生成分镜获取任务ID", "error");
+                return;
+            }
+            log("开始测试：生成图片");
+            const params = {
+                task_id: storyTaskId,
+                frame_num: 1,
+                prompt: "清晨森林，小鹿，4K高清"
+            };
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/image/generate`, "POST", params);
+            if (res.success) {
+                imageTaskId = res.data.data.image_task_id;
+                log(`✅ 生成图片请求成功，任务ID：${imageTaskId}`, "success");
+                
+                // 调用假AI Server
+                await request(`${FAKE_AI_SERVER_URL}/generate/image`, "POST", {
+                    task_id: imageTaskId,
+                    prompt: params.prompt
+                });
+            } else {
+                log(`❌ 生成图片请求失败：${res.error}`, "error");
+            }
+        }
+
+        async function testImageQuery() {
+            if (!imageTaskId) {
+                log("❌ 请先生成图片获取任务ID", "error");
+                return;
+            }
+            log(`开始测试：查询图片结果（任务ID：${imageTaskId}）`);
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/image/result?image_task_id=${imageTaskId}`);
+            if (res.success) {
+                log(`✅ 查询图片结果成功：${JSON.stringify(res.data)}`, "success");
+            } else {
+                log(`❌ 查询图片结果失败：${res.error}`, "error");
+            }
+        }
+
+        // ---------------------- 视频测试 ----------------------
+        async function testVideoGenerate() {
+            if (!imageTaskId) {
+                log("❌ 请先生成图片获取任务ID", "error");
+                return;
+            }
+            log("开始测试：生成视频");
+            const params = {
+                project_id: "test_proj_001",
+                image_ids: [imageTaskId],
+                bgm_url: "https://fake-ai-server.com/bgm/test.mp3"
+            };
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/video/generate`, "POST", params);
+            if (res.success) {
+                videoTaskId = res.data.data.video_task_id;
+                log(`✅ 生成视频请求成功，任务ID：${videoTaskId}`, "success");
+                
+                // 调用假AI Server
+                await request(`${FAKE_AI_SERVER_URL}/generate/video`, "POST", {
+                    task_id: videoTaskId,
+                    image_ids: params.image_ids
+                });
+            } else {
+                log(`❌ 生成视频请求失败：${res.error}`, "error");
+            }
+        }
+
+        async function testVideoQuery() {
+            if (!videoTaskId) {
+                log("❌ 请先生成视频获取任务ID", "error");
+                return;
+            }
+            log(`开始测试：查询视频结果（任务ID：${videoTaskId}）`);
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/video/result?video_task_id=${videoTaskId}`);
+            if (res.success) {
+                log(`✅ 查询视频结果成功：${JSON.stringify(res.data)}`, "success");
+            } else {
+                log(`❌ 查询视频结果失败：${res.error}`, "error");
+            }
+        }
+
+        // ---------------------- 项目管理测试 ----------------------
+        async function testProjectList() {
+            log("开始测试：查询项目列表");
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/project/list`);
+            if (res.success) {
+                log(`✅ 查询项目列表成功：${JSON.stringify(res.data)}`, "success");
+            } else {
+                log(`❌ 查询项目列表失败：${res.error}`, "error");
+            }
+        }
+
+        async function testProjectDelete() {
+            log("开始测试：删除测试项目");
+            const params = { project_id: "test_proj_001" };
+            
+            const res = await request(`${GO_SERVER_BASE_URL}/project/delete`, "POST", params);
+            if (res.success) {
+                log(`✅ 删除项目成功：${JSON.stringify(res.data)}`, "success");
+            } else {
+                log(`❌ 删除项目失败：${res.error}`, "error");
+            }
+        }
+    </script>
+</body>
+</html>

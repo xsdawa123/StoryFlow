@@ -1,0 +1,67 @@
+package db
+
+import (
+"context"
+"fmt"
+"story2video_server/utils"
+"time"
+
+"go.uber.org/zap" // 新增：导入zap包，替换gorm logger.String
+"gorm.io/driver/mysql"
+"gorm.io/gorm"
+"gorm.io/gorm/logger"
+)
+
+var DB *gorm.DB // 全局数据库连接实例
+
+// InitDB 初始化数据库连接
+func InitDB() error {
+// 读取RDS配置
+cfg := utils.Config.Mysql
+dsn := fmt.Sprintf(
+"%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=Local&collation=utf8mb4_unicode_ci",
+cfg.Username,
+cfg.Password,
+cfg.Host,
+cfg.Port,
+cfg.Dbname,
+cfg.Charset,
+)
+
+// 配置日志级别
+logLevel := logger.Silent
+if utils.Config.Server.Mode == "debug" {
+logLevel = logger.Info
+}
+
+// 连接数据库
+db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{
+Logger: logger.Default.LogMode(logLevel),
+})
+if err != nil {
+return fmt.Errorf("数据库连接失败: %v", err)
+}
+
+// 配置连接池
+sqlDB, err := db.DB()
+if err != nil {
+return fmt.Errorf("获取连接池失败: %v", err)
+}
+sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
+sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
+sqlDB.SetConnMaxLifetime(time.Duration(cfg.ConnMaxLifetime) * time.Second)
+
+// 测试连接
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+defer cancel()
+if err := sqlDB.PingContext(ctx); err != nil {
+return fmt.Errorf("数据库Ping失败: %v", err)
+}
+
+DB = db
+// 修复：使用zap.String替代logger.String（gorm logger无String方法）
+utils.Logger.Info("数据库连接成功", 
+zap.String("host", cfg.Host),
+zap.String("dbname", cfg.Dbname))
+return nil
+}

@@ -1,0 +1,12 @@
+{
+    "server": {
+        "port": "8080"  // 你的Go服务端口，保持不变
+    },
+    "db": {
+        "host": "rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com",  // 你的RDS地址
+        "port": "3306",                                         // 你的RDS端口
+        "username": "User1111",                                 // 你的RDS账号
+        "password": "User1111",                                 // 你的RDS密码（注意引号转义：若密码含特殊字符如!，直接写即可）
+        "db_name": "db_story2video"                             // 你的RDS数据库名
+    }
+}

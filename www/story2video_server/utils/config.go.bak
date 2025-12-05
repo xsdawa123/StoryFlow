@@ -1,0 +1,66 @@
+package utils
+
+import (
+"fmt"
+"github.com/google/uuid" // 新增：导入uuid包，解决undefined: uuid
+"github.com/spf13/viper"
+)
+
+// Config 全局配置结构体（仅定义一次，解决重复定义问题）
+type ConfigStruct struct {
+Server struct {
+Port string `mapstructure:"port"`
+Mode string `mapstructure:"mode"`
+} `mapstructure:"server"`
+Mysql struct {
+Host            string `mapstructure:"host"`
+Port            int    `mapstructure:"port"`
+Username        string `mapstructure:"username"`
+Password        string `mapstructure:"password"`
+Dbname          string `mapstructure:"dbname"`
+Charset         string `mapstructure:"charset"`
+MaxIdleConns    int    `mapstructure:"max_idle_conns"`
+MaxOpenConns    int    `mapstructure:"max_open_conns"`
+ConnMaxLifetime int    `mapstructure:"conn_max_lifetime"`
+} `mapstructure:"mysql"`
+AiServer struct {
+BaseUrl string `mapstructure:"base_url"`
+Timeout int    `mapstructure:"timeout"`
+} `mapstructure:"ai_server"`
+Logger struct {
+Level     string `mapstructure:"level"`
+Filename  string `mapstructure:"filename"`
+MaxSize   int    `mapstructure:"max_size"`
+MaxBackup int    `mapstructure:"max_backup"`
+MaxAge    int    `mapstructure:"max_age"`
+Compress  bool   `mapstructure:"compress"`
+} `mapstructure:"logger"`
+}
+
+// Config 全局配置实例（解决调用方式错误）
+var Config ConfigStruct
+
+// InitConfig 初始化配置
+func InitConfig() error {
+viper.SetConfigName("config")
+viper.SetConfigType("yaml")
+viper.AddConfigPath("./config")
+viper.AddConfigPath("/var/www/story2video_server/config")
+
+if err := viper.ReadInConfig(); err != nil {
+return fmt.Errorf("读取配置文件失败: %v", err)
+}
+
+if err := viper.Unmarshal(&Config); err != nil {
+return fmt.Errorf("解析配置文件失败: %v", err)
+}
+
+fmt.Println("配置文件初始化成功")
+return nil
+}
+
+// GenerateShortUUID 生成短UUID（修复调用方式，使用全局Config实例）
+func GenerateShortUUID() string {
+uid, _ := uuid.NewRandom()
+return uid.String()[:8] // 取前8位作为短UUID
+}
