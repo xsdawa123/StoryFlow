@@ -152,3 +152,5 @@
 {"level":"info","time":"2025-12-05T15:09:16.918+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
 {"level":"info","time":"2025-12-05T15:23:50.487+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
 {"level":"info","time":"2025-12-05T15:23:52.597+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T15:45:02.867+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T15:45:05.039+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}

@@ -1,0 +1,9 @@
+{"code":400,"data":null,"msg":"参数错误: EOF"}--_curl_--
+>   "project_id":"test_004"
+--_curl_--
+>   "scene_id":"scene_1"
+--_curl_--
+>   "style":"写实风格"
+--_curl_--
+>   "user_id":"user_1003"
+> 
