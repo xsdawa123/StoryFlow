@@ -1,39 +1,43 @@
 package main
 
 import (
+"log"
 "story2video_server/handler"
-"story2video_server/utils" 
+"story2video_server/utils"
+
 "github.com/gin-gonic/gin"
 )
 
 func main() {
+// 初始化数据库
+utils.InitDB()
+
 // 创建Gin引擎
 r := gin.Default()
 
-// 注册API路由组（直接映射AI Server路径，无/client层级）
+// 注册路由
 api := r.Group("/api")
 {
-// 直接绑定AI Server风格路径到处理函数
+// 原有接口（不改动）
 api.POST("/generate/story", handler.GenerateStory)
 api.POST("/generate/images", handler.GenerateImages)
 api.POST("/generate/audios", handler.GenerateAudios)
-
-// 分镜/项目列表查询（保留原有路径，按需调整）
 api.GET("/shots/list", handler.ListShots)
 api.GET("/projects/list", handler.ListProjects)
 
-// AI Server回调路由组
-callback := api.Group("/callback")
+// Client接口组（对应你的需求）
+client := api.Group("/client")
 {
-callback.POST("/story/result", handler.StoryResultCallback)
-callback.POST("/image/result", handler.ImageResultCallback)
-callback.POST("/audio/result", handler.AudioResultCallback)
+client.POST("/story/generate", handler.storyGenerate)  // 1. 创建故事
+client.GET("/shots/list", handler.clientListShots)     // 2. 轮询分镜列表
+client.POST("/image/regenerate", handler.imageRegenerate) // 3. 重新生成图片
+client.GET("/image/result", handler.imageResult)       // 4. 轮询图片状态
 }
 }
 
-// 启动服务，监听8080端口
-err := r.Run(":8080")
-if err != nil {
-panic("服务启动失败: " + err.Error())
+// 启动服务
+log.Println("服务启动成功，监听端口8080")
+if err := r.Run(":8080"); err != nil {
+log.Fatal("服务启动失败: ", err)
 }
 }

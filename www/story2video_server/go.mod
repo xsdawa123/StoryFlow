@@ -11,7 +11,6 @@ require (
 )
 
 require (
-	github.com/gin-contrib/cors v1.7.6
 	github.com/go-sql-driver/mysql v1.9.3
 	gopkg.in/yaml.v3 v3.0.1
 )
@@ -55,6 +54,7 @@ require (
 	golang.org/x/text v0.27.0 // indirect
 	golang.org/x/tools v0.34.0 // indirect
 	google.golang.org/protobuf v1.36.9 // indirect
+	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 )
 
 replace story2video_server/utils => ./utils

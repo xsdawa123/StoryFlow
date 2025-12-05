@@ -222,49 +222,30 @@ return
 log.Printf("【图片生成】调用AI Server成功 | 返回数据: %+v", aiResp)
 
 // 写入shots表（更新image_url和shot_status，对齐文档image_response映射）
-// 写入shots表（更新image_url和shot_status，对齐文档image_response映射）
 if utils.DB != nil {
-    for key, value := range aiResp {
-        if len(key) >= 5 && key[:5] == "shot_" {
-            // 从shot_1提取shotID（解决AI返回shot_id为空）
-            shotIDFromKey := key[5:]
-            shotMap, ok := value.(map[string]interface{})
-            if !ok {
-                continue
-            }
-            // 安全提取字段，防止nil panic
-            shotID := shotIDFromKey // 优先用key提取的ID
-            if sID, ok := shotMap["shot_id"].(string); ok && sID != "" {
-                shotID = sID
-            }
-            imageURL := ""
-            if imgURL, ok := shotMap["image_url"].(string); ok {
-                imageURL = imgURL
-            }
-            shotStatus := "generated"
-            if sStatus, ok := shotMap["shot_status"].(string); ok {
-                shotStatus = sStatus
-            }
-            // 修正UPDATE条件：id → shot_id
-            _, err = utils.DB.Exec(`
-                UPDATE shots SET image_url=?, shot_status=?, update_time=NOW()
-                WHERE project_id=? AND shot_id=?
-            `, imageURL, shotStatus, projectID, shotID)
-            if err != nil {
-                // 更新失败则插入，兜底保证URL写入
-                log.Printf("【图片生成】更新失败，尝试插入 | projectID: %s | shotID: %s", projectID, shotID)
-                _, insErr := utils.DB.Exec(`
-                    INSERT INTO shots (shot_id, project_id, image_url, shot_status)
-                    VALUES (?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE image_url=?, shot_status=?
-                `, shotID, projectID, imageURL, shotStatus, imageURL, shotStatus)
-                if insErr != nil {
-                    log.Printf("【图片生成】插入失败 | err: %v", insErr)
-                }
-            }
-        }
-    }
+for key, value := range aiResp {
+if len(key) >= 5 && key[:5] == "shot_" {
+shotMap, ok := value.(map[string]interface{})
+if !ok {
+continue
 }
+shotID := shotMap["shot_id"].(string)
+imageURL := shotMap["image_url"].(string)
+shotStatus := shotMap["shot_status"].(string)
+
+_, err = utils.DB.Exec(`
+UPDATE shots SET image_url=?, shot_status=?, update_time=NOW()
+WHERE project_id=? AND id=?
+`, imageURL, shotStatus, projectID, shotID)
+if err != nil {
+log.Printf("【图片生成】更新shots表失败 | 项目ID: %s | shot_id: %s | 错误: %v", projectID, shotID, err)
+} else {
+log.Printf("【图片生成】更新shots表成功 | 项目ID: %s | shot_id: %s", projectID, shotID)
+}
+}
+}
+}
+
 c.JSON(http.StatusOK, gin.H{
 "code": 0,
 "data": aiResp,
@@ -369,57 +350,31 @@ return
 
 log.Printf("【音频生成】调用AI Server成功 | 返回数据: %+v", aiResp)
 
-// 写入shots表（更新audio_url和shot_status，对齐音频响应映射）
+// 写入shots表（更新audio_url和shot_status，对齐文档audio_response映射）
 if utils.DB != nil {
-    for key, value := range aiResp {
-        if len(key) >= 5 && key[:5] == "shot_" {
-            // 从shot_1/shot_2提取shotID（解决AI返回shot_id为空）
-            shotIDFromKey := key[5:]
-            shotMap, ok := value.(map[string]interface{})
-            if !ok {
-                continue
-            }
-
-            // 安全提取字段，防止nil panic
-            shotID := shotIDFromKey // 优先用key提取的ID
-            if sID, ok := shotMap["shot_id"].(string); ok && sID != "" {
-                shotID = sID
-            }
-            audioURL := ""
-            if audURL, ok := shotMap["audio_url"].(string); ok {
-                audioURL = audURL
-            }
-            shotStatus := "generated"
-            if sStatus, ok := shotMap["shot_status"].(string); ok {
-                shotStatus = sStatus
-            }
-
-            // 修正UPDATE条件：id → shot_id，字段改为audio_url
-            _, err = utils.DB.Exec(`
-                UPDATE shots SET audio_url=?, shot_status=?, update_time=NOW()
-                WHERE project_id=? AND shot_id=?
-            `, audioURL, shotStatus, projectID, shotID)
-            
-            if err != nil {
-                // 更新失败则插入，兜底保证URL写入
-                log.Printf("【音频生成】更新失败，尝试插入 | projectID: %s | shotID: %s", projectID, shotID)
-                _, insErr := utils.DB.Exec(`
-                    INSERT INTO shots (shot_id, project_id, audio_url, shot_status)
-                    VALUES (?, ?, ?, ?)
-                    ON DUPLICATE KEY UPDATE audio_url=VALUES(audio_url), shot_status=VALUES(shot_status)
-                `, shotID, projectID, audioURL, shotStatus)
-                
-                if insErr != nil {
-                    log.Printf("【音频生成】插入失败 | err: %v", insErr)
-                } else {
-                    log.Printf("【音频生成】URL写入成功 | shotID: %s | URL: %s", shotID, audioURL)
-                }
-            } else {
-                log.Printf("【音频生成】URL写入成功 | shotID: %s | URL: %s", shotID, audioURL)
-            }
-        }
-    }
+for key, value := range aiResp {
+if len(key) >= 5 && key[:5] == "shot_" {
+shotMap, ok := value.(map[string]interface{})
+if !ok {
+continue
 }
+shotID := shotMap["shot_id"].(string)
+audioURL := shotMap["audio_url"].(string)
+shotStatus := shotMap["shot_status"].(string)
+
+_, err = utils.DB.Exec(`
+UPDATE shots SET audio_url=?, shot_status=?, update_time=NOW()
+WHERE project_id=? AND id=?
+`, audioURL, shotStatus, projectID, shotID)
+if err != nil {
+log.Printf("【音频生成】更新shots表失败 | 项目ID: %s | shot_id: %s | 错误: %v", projectID, shotID, err)
+} else {
+log.Printf("【音频生成】更新shots表成功 | 项目ID: %s | shot_id: %s", projectID, shotID)
+}
+}
+}
+}
+
 c.JSON(http.StatusOK, gin.H{
 "code": 0,
 "data": aiResp,
@@ -438,17 +393,10 @@ c.JSON(http.StatusBadRequest, gin.H{
 })
 return
 }
-if utils.DB == nil {
-        c.JSON(http.StatusInternalServerError, gin.H{
-            "code":500,
-            "data":nil,
-            "msg": "数据库连接未初始化（utils.DB为nil）",
-        })
-        return
-}
+
 // 从shots表查询分镜数据（对齐数据库字段）
 rows, err := utils.DB.Query(`
-SELECT shot_id, project_id, scene_title, prompt, narration, transition, image_url, audio_url, shot_status
+SELECT id, project_id, scene_title, prompt, narration, transition, image_url, audio_url, shot_status
 FROM shots WHERE project_id=?
 `, projectID)
 if err != nil {
