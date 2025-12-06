@@ -1,0 +1,156 @@
+{"level":"info","time":"2025-12-04T19:00:55.457+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T19:00:55.486+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T19:00:55.487+0800","caller":"story2video_server/main.go:38","msg":"服务启动成功","port":":8080","ecs_public_ip":"39.105.112.239"}
+{"level":"info","time":"2025-12-04T19:00:57.336+0800","caller":"handler/client_handler.go:179","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-04T19:28:16.411+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T19:28:16.411+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"test_001","status":"completed"}
+{"level":"info","time":"2025-12-04T19:43:43.399+0800","caller":"handler/client_handler.go:13","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-04T19:48:07.718+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T19:48:07.742+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T19:48:07.742+0800","caller":"story2video_server/main.go:38","msg":"服务启动成功","port":":8080","ecs_public_ip":"39.105.112.239"}
+{"level":"info","time":"2025-12-04T19:56:04.235+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T19:56:04.260+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T19:56:12.166+0800","caller":"handler/client_handler.go:13","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-04T19:56:14.175+0800","caller":"handler/client_handler.go:71","msg":"收到图片生成请求"}
+{"level":"info","time":"2025-12-04T19:56:14.207+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T19:56:14.208+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_proj_001_ce07b08a","status":"completed"}
+{"level":"info","time":"2025-12-04T19:56:15.098+0800","caller":"handler/client_handler.go:125","msg":"收到视频生成请求"}
+{"level":"info","time":"2025-12-04T19:56:16.103+0800","caller":"handler/client_handler.go:179","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-04T19:56:16.213+0800","caller":"handler/callback_handler.go:40","msg":"收到AI Server图片回调请求"}
+{"level":"info","time":"2025-12-04T19:56:16.213+0800","caller":"handler/callback_handler.go:56","msg":"图片回调处理完成","image_task_id":"image_task_story_task_test_proj_001_ce07b08a_fe24a51a","status":"completed"}
+{"level":"info","time":"2025-12-04T19:56:17.135+0800","caller":"handler/callback_handler.go:66","msg":"收到AI Server视频回调请求"}
+{"level":"info","time":"2025-12-04T19:56:17.135+0800","caller":"handler/callback_handler.go:83","msg":"视频回调处理完成","video_task_id":"video_task_test_proj_001_30f0f4c1","status":"completed"}
+{"level":"info","time":"2025-12-04T19:56:17.940+0800","caller":"handler/client_handler.go:41","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-04T19:56:19.323+0800","caller":"handler/client_handler.go:98","msg":"收到图片结果查询请求"}
+{"level":"info","time":"2025-12-04T19:56:19.951+0800","caller":"handler/client_handler.go:152","msg":"收到视频结果查询请求"}
+{"level":"info","time":"2025-12-04T20:11:14.106+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T20:11:14.130+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T20:12:55.004+0800","caller":"handler/client_handler.go:13","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-04T20:15:29.490+0800","caller":"handler/client_handler.go:13","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-04T20:15:31.526+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T20:15:31.526+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_proj_001_18ab2dfa","status":"completed"}
+{"level":"info","time":"2025-12-04T20:15:37.817+0800","caller":"handler/client_handler.go:71","msg":"收到图片生成请求"}
+{"level":"info","time":"2025-12-04T20:15:39.862+0800","caller":"handler/callback_handler.go:40","msg":"收到AI Server图片回调请求"}
+{"level":"info","time":"2025-12-04T20:15:39.862+0800","caller":"handler/callback_handler.go:56","msg":"图片回调处理完成","image_task_id":"image_task_story_task_test_proj_001_18ab2dfa_9acd7327","status":"completed"}
+{"level":"info","time":"2025-12-04T20:15:42.383+0800","caller":"handler/client_handler.go:41","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-04T20:15:45.218+0800","caller":"handler/client_handler.go:98","msg":"收到图片结果查询请求"}
+{"level":"info","time":"2025-12-04T20:19:21.027+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T20:19:21.054+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T20:19:30.566+0800","caller":"handler/client_handler.go:13","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-04T20:19:32.604+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T20:19:32.604+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_proj_001_5a522d42","status":"completed"}
+{"level":"info","time":"2025-12-04T20:19:32.916+0800","caller":"handler/client_handler.go:71","msg":"收到图片生成请求"}
+{"level":"info","time":"2025-12-04T20:19:34.952+0800","caller":"handler/callback_handler.go:40","msg":"收到AI Server图片回调请求"}
+{"level":"info","time":"2025-12-04T20:19:34.953+0800","caller":"handler/callback_handler.go:56","msg":"图片回调处理完成","image_task_id":"image_task_story_task_test_proj_001_5a522d42_c76f6ee9","status":"completed"}
+{"level":"info","time":"2025-12-04T20:19:35.872+0800","caller":"handler/client_handler.go:125","msg":"收到视频生成请求"}
+{"level":"info","time":"2025-12-04T20:19:36.944+0800","caller":"handler/client_handler.go:179","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-04T20:19:37.913+0800","caller":"handler/callback_handler.go:66","msg":"收到AI Server视频回调请求"}
+{"level":"info","time":"2025-12-04T20:19:37.914+0800","caller":"handler/callback_handler.go:83","msg":"视频回调处理完成","video_task_id":"video_task_test_proj_001_ebc3571a","status":"completed"}
+{"level":"info","time":"2025-12-04T20:26:39.432+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T20:26:39.458+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T20:28:04.945+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"error","time":"2025-12-04T20:28:04.946+0800","caller":"handler/callback_handler.go:21","msg":"分镜回调参数解析失败","error":"Key: 'TaskID' Error:Field validation for 'TaskID' failed on the 'required' tag\nKey: 'Status' Error:Field validation for 'Status' failed on the 'required' tag","stacktrace":"story2video_server/handler.StoryCallback\n\t/var/www/story2video_server/handler/callback_handler.go:21\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-04T20:28:43.181+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"error","time":"2025-12-04T20:28:43.182+0800","caller":"handler/callback_handler.go:21","msg":"分镜回调参数解析失败","error":"invalid character '#' looking for beginning of object key string","stacktrace":"story2video_server/handler.StoryCallback\n\t/var/www/story2video_server/handler/callback_handler.go:21\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-04T20:29:14.044+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"error","time":"2025-12-04T20:29:14.045+0800","caller":"handler/callback_handler.go:21","msg":"分镜回调参数解析失败","error":"EOF","stacktrace":"story2video_server/handler.StoryCallback\n\t/var/www/story2video_server/handler/callback_handler.go:21\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-04T20:29:42.025+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T20:29:42.025+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_rds_final_001","status":"completed"}
+{"level":"info","time":"2025-12-04T20:34:16.621+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T20:34:16.621+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_rds_final_002","status":"completed"}
+{"level":"info","time":"2025-12-04T20:42:50.126+0800","caller":"utils/logger.go:69","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T20:42:50.150+0800","caller":"db/db.go:63","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T20:43:15.224+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T20:43:15.224+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_rds_final_006","status":"completed"}
+{"level":"info","time":"2025-12-04T20:59:01.604+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T20:59:01.605+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T20:59:01.627+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T20:59:01.627+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-04T20:59:01.627+0800","caller":"story2video_server/main.go:38","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-04T20:59:24.046+0800","caller":"handler/callback_handler.go:13","msg":"收到AI Server分镜回调请求"}
+{"level":"info","time":"2025-12-04T20:59:24.046+0800","caller":"handler/callback_handler.go:30","msg":"分镜回调处理完成","task_id":"story_task_test_rds_final_009","status":"completed"}
+{"level":"info","time":"2025-12-04T21:02:59.287+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T21:02:59.287+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-04T21:02:59.308+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-04T21:02:59.308+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-04T21:02:59.308+0800","caller":"story2video_server/main.go:38","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-04T21:03:28.460+0800","caller":"handler/callback_handler.go:37","msg":"分镜回调-接收参数","task_id":"story_task_test_rds_final_011","project_id":"test_rds_final_011","raw_story":"终极修复测试：清晨森林小鹿觅食","style":"卡通","project_status":"completed"}
+{"level":"info","time":"2025-12-04T21:03:28.461+0800","caller":"handler/callback_handler.go:54","msg":"分镜回调-开始写入projects表","project_id":"test_rds_final_011"}
+{"level":"info","time":"2025-12-04T21:03:28.476+0800","caller":"handler/callback_handler.go:69","msg":"分镜回调-写入数据库成功","project_id":"test_rds_final_011"}
+{"level":"info","time":"2025-12-05T09:58:17.034+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T09:58:17.035+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T09:58:17.058+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T09:58:17.058+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T09:58:17.058+0800","caller":"story2video_server/main.go:38","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T10:00:09.234+0800","caller":"handler/client_handler.go:15","msg":"收到分镜生成请求"}
+{"level":"error","time":"2025-12-05T10:00:09.235+0800","caller":"handler/client_handler.go:22","msg":"分镜生成参数解析失败","error":"Key: 'Content' Error:Field validation for 'Content' failed on the 'required' tag","stacktrace":"story2video_server/handler.GenerateStory\n\t/var/www/story2video_server/handler/client_handler.go:22\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-05T10:02:42.132+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:02:42.132+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:02:42.154+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T10:02:42.154+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T10:02:42.154+0800","caller":"story2video_server/main.go:38","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T10:03:04.006+0800","caller":"handler/client_handler.go:15","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T10:04:13.181+0800","caller":"handler/client_handler.go:43","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T10:04:37.673+0800","caller":"handler/client_handler.go:73","msg":"收到图片生成请求"}
+{"level":"error","time":"2025-12-05T10:04:37.673+0800","caller":"handler/client_handler.go:80","msg":"图片生成参数解析失败","error":"Key: 'TaskID' Error:Field validation for 'TaskID' failed on the 'required' tag\nKey: 'FrameNum' Error:Field validation for 'FrameNum' failed on the 'required' tag","stacktrace":"story2video_server/handler.GenerateImage\n\t/var/www/story2video_server/handler/client_handler.go:80\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-05T10:05:44.040+0800","caller":"handler/client_handler.go:73","msg":"收到图片生成请求"}
+{"level":"error","time":"2025-12-05T10:05:44.041+0800","caller":"handler/client_handler.go:80","msg":"图片生成参数解析失败","error":"invalid character '#' looking for beginning of object key string","stacktrace":"story2video_server/handler.GenerateImage\n\t/var/www/story2video_server/handler/client_handler.go:80\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-05T10:06:14.313+0800","caller":"handler/client_handler.go:73","msg":"收到图片生成请求"}
+{"level":"error","time":"2025-12-05T10:06:14.314+0800","caller":"handler/client_handler.go:80","msg":"图片生成参数解析失败","error":"Key: 'TaskID' Error:Field validation for 'TaskID' failed on the 'required' tag\nKey: 'FrameNum' Error:Field validation for 'FrameNum' failed on the 'required' tag","stacktrace":"story2video_server/handler.GenerateImage\n\t/var/www/story2video_server/handler/client_handler.go:80\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.CustomRecoveryWithWriter.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/recovery.go:102\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.LoggerWithConfig.func1\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/logger.go:249\ngithub.com/gin-gonic/gin.(*Context).Next\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/context.go:185\ngithub.com/gin-gonic/gin.(*Engine).handleHTTPRequest\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:644\ngithub.com/gin-gonic/gin.(*Engine).ServeHTTP\n\t/root/go/pkg/mod/github.com/gin-gonic/gin@v1.10.1/gin.go:600\nnet/http.serverHandler.ServeHTTP\n\t/usr/local/go/src/net/http/server.go:3301\nnet/http.(*conn).serve\n\t/usr/local/go/src/net/http/server.go:2102"}
+{"level":"info","time":"2025-12-05T10:06:50.023+0800","caller":"handler/client_handler.go:73","msg":"收到图片生成请求"}
+{"level":"info","time":"2025-12-05T10:14:06.413+0800","caller":"handler/client_handler.go:100","msg":"收到图片结果查询请求"}
+{"level":"info","time":"2025-12-05T10:15:06.925+0800","caller":"handler/client_handler.go:100","msg":"收到图片结果查询请求"}
+{"level":"info","time":"2025-12-05T10:15:38.432+0800","caller":"handler/client_handler.go:100","msg":"收到图片结果查询请求"}
+{"level":"info","time":"2025-12-05T10:27:28.540+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:27:28.540+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:27:28.562+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T10:27:28.562+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T10:27:28.562+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T10:29:05.131+0800","caller":"handler/client_handler.go:182","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-05T10:30:45.263+0800","caller":"handler/client_handler.go:193","msg":"收到删除项目请求"}
+{"level":"info","time":"2025-12-05T10:31:18.256+0800","caller":"handler/client_handler.go:182","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-05T10:33:58.448+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:33:58.449+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:33:58.471+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T10:33:58.471+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T10:33:58.471+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T10:34:03.912+0800","caller":"handler/client_handler.go:182","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-05T10:44:14.701+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:44:14.701+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:44:14.722+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T10:44:14.723+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T10:44:14.723+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T10:44:26.294+0800","caller":"handler/client_handler.go:182","msg":"收到项目列表查询请求"}
+{"level":"info","time":"2025-12-05T10:49:19.271+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:49:19.271+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T10:49:19.293+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T10:49:19.293+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T10:49:19.294+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T12:27:52.650+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T12:27:52.651+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T12:27:52.673+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T12:27:52.673+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T12:27:52.674+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T12:30:15.997+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T12:30:18.120+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T12:30:50.793+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T12:30:52.978+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T15:06:24.716+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T15:06:24.717+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T15:06:24.738+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T15:06:24.738+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T15:06:24.738+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"info","time":"2025-12-05T15:07:30.689+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T15:07:30.689+0800","caller":"utils/logger.go:30","msg":"日志初始化成功","log_file":"logs/story2video.log"}
+{"level":"info","time":"2025-12-05T15:07:30.712+0800","caller":"config/db.go:27","msg":"数据库连接成功","host":"rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com","dbname":"db_story2video"}
+{"level":"info","time":"2025-12-05T15:07:30.712+0800","caller":"config/config.go:13","msg":"配置文件初始化成功"}
+{"level":"info","time":"2025-12-05T15:07:30.712+0800","caller":"story2video_server/main.go:50","msg":"服务启动成功，监听端口：8080"}
+{"level":"fatal","time":"2025-12-05T15:07:30.713+0800","caller":"story2video_server/main.go:53","msg":"服务启动失败","error":"listen tcp :8080: bind: address already in use","stacktrace":"main.main\n\t/var/www/story2video_server/main.go:53\nruntime.main\n\t/usr/local/go/src/runtime/proc.go:283"}
+{"level":"info","time":"2025-12-05T15:07:53.337+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T15:07:55.474+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T15:09:14.765+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T15:09:16.918+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T15:23:50.487+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T15:23:52.597+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}
+{"level":"info","time":"2025-12-05T15:45:02.867+0800","caller":"handler/client_handler.go:16","msg":"收到分镜生成请求"}
+{"level":"info","time":"2025-12-05T15:45:05.039+0800","caller":"handler/client_handler.go:44","msg":"收到分镜结果查询请求"}

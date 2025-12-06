@@ -1,0 +1,227 @@
+package handler
+
+import (
+"log"
+"net/http"
+
+"story2video_server/utils"
+
+"github.com/gin-gonic/gin"
+)
+
+func GenerateStory(c *gin.Context) {
+type GenerateStoryReq struct {
+ProjectID string `json:"project_id" binding:"required"`
+RawStory  string `json:"raw_story" binding:"required"`
+Style     string `json:"style" binding:"required"`
+UserID    string `json:"user_id" binding:"required"`
+}
+
+var req GenerateStoryReq
+if err := c.ShouldBindJSON(&req); err != nil {
+log.Printf("解析请求参数失败: %v | 请求参数: %+v", err, req)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+log.Printf("解析请求参数成功 | 项目ID: %s | 故事内容: %s | 风格: %s | 用户ID: %s",
+req.ProjectID, req.RawStory, req.Style, req.UserID)
+
+type AISStoryReq struct {
+ProjectID   string `json:"project_id"`
+RawStory    string `json:"raw_story"`
+Style       string `json:"style"`
+CallbackURL string `json:"callback_url"`
+}
+aiReq := AISStoryReq{
+ProjectID:   req.ProjectID,
+RawStory:    req.RawStory,
+Style:       req.Style,
+CallbackURL: "http://127.0.0.1:8080/api/callback/story/result",
+}
+
+log.Printf("准备调用AI Server | AI接口路径: /api/generate/story | 请求参数: %+v", aiReq)
+
+var aiResp map[string]interface{}
+err := utils.PostJSON("/api/generate/story", aiReq, &aiResp)
+if err != nil {
+log.Printf("调用AI Server失败 | 接口路径: /api/generate/story | 请求参数: %+v | 错误: %v", aiReq, err)
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "调用AI Server失败: " + err.Error(),
+})
+return
+}
+
+log.Printf("调用AI Server成功 | 原始返回数据: %+v", aiResp)
+
+if utils.DB != nil {
+_, err = utils.DB.Exec(`
+INSERT INTO projects (project_id, user_id, raw_story, style, project_status, create_time, update_time)
+VALUES (?, ?, ?, ?, 'generating', NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_time=NOW()
+`, req.ProjectID, req.UserID, req.RawStory, req.Style)
+if err != nil {
+log.Printf("写入项目表失败 | 项目ID: %s | 错误: %v", req.ProjectID, err)
+} else {
+log.Printf("写入项目表成功 | 项目ID: %s", req.ProjectID)
+}
+}
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": aiResp,
+"msg":  "故事生成任务已提交至AI Server",
+})
+}
+
+func GenerateImages(c *gin.Context) {
+type GenerateImagesReq struct {
+ProjectID string `json:"project_id" binding:"required"`
+SceneID   string `json:"scene_id" binding:"required"` // 对应AI Server的shot_id
+Style     string `json:"style" binding:"required"`
+UserID    string `json:"user_id" binding:"required"`
+}
+
+var req GenerateImagesReq
+if err := c.ShouldBindJSON(&req); err != nil {
+log.Printf("解析图片生成请求参数失败: %v | 请求参数: %+v", err, req)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+log.Printf("解析图片生成请求参数成功 | 项目ID: %s | 分镜ID: %s | 风格: %s | 用户ID: %s",
+req.ProjectID, req.SceneID, req.Style, req.UserID)
+
+type AIImageReq struct {
+ProjectID   string `json:"project_id"`
+SceneID     string `json:"scene_id"` // 对应AI Server的shot_id
+Style       string `json:"style"`
+CallbackURL string `json:"callback_url"`
+}
+aiReq := AIImageReq{
+ProjectID:   req.ProjectID,
+SceneID:     req.SceneID,
+Style:       req.Style,
+CallbackURL: "http://127.0.0.1:8080/api/callback/image/result",
+}
+
+log.Printf("准备调用AI Server生成图片 | AI接口路径: /api/generate/images | 请求参数: %+v", aiReq)
+
+var aiResp map[string]interface{}
+err := utils.PostJSON("/api/generate/images", aiReq, &aiResp)
+if err != nil {
+log.Printf("调用AI Server生成图片失败 | 接口路径: /api/generate/images | 请求参数: %+v | 错误: %v", aiReq, err)
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "调用AI Server生成图片失败: " + err.Error(),
+})
+return
+}
+
+log.Printf("调用AI Server生成图片成功 | 原始返回数据: %+v", aiResp)
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": aiResp,
+"msg":  "图片生成任务已提交至AI Server",
+})
+}
+
+// 核心修改：GenerateVideos → GenerateAudios（视频→音频）
+func GenerateAudios(c *gin.Context) {
+type GenerateAudiosReq struct {
+ProjectID string `json:"project_id" binding:"required"`
+Style     string `json:"style" binding:"required"` // 音频风格（对应AI Server的audeos模型）
+UserID    string `json:"user_id" binding:"required"`
+}
+
+var req GenerateAudiosReq
+if err := c.ShouldBindJSON(&req); err != nil {
+log.Printf("解析音频生成请求参数失败: %v | 请求参数: %+v", err, req)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+log.Printf("解析音频生成请求参数成功 | 项目ID: %s | 风格: %s | 用户ID: %s",
+req.ProjectID, req.Style, req.UserID)
+
+type AIAudioReq struct {
+ProjectID   string `json:"project_id"`
+Style       string `json:"style"` // 适配audeos模型风格参数
+CallbackURL string `json:"callback_url"`
+}
+aiReq := AIAudioReq{
+ProjectID:   req.ProjectID,
+Style:       req.Style,
+CallbackURL: "http://127.0.0.1:8080/api/callback/audio/result",
+}
+
+// 核心修改：/api/generate/videos → /api/generate/audios
+log.Printf("准备调用AI Server生成音频 | AI接口路径: /api/generate/audios | 请求参数: %+v", aiReq)
+
+var aiResp map[string]interface{}
+// 核心修改：/api/generate/videos → /api/generate/audios
+err := utils.PostJSON("/api/generate/audios", aiReq, &aiResp)
+if err != nil {
+log.Printf("调用AI Server生成音频失败 | 接口路径: /api/generate/audios | 请求参数: %+v | 错误: %v", aiReq, err)
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "调用AI Server生成音频失败: " + err.Error(),
+})
+return
+}
+
+log.Printf("调用AI Server生成音频成功 | 原始返回数据: %+v", aiResp)
+
+// 数据库适配：视频→音频（注释/逻辑同步调整）
+if utils.DB != nil {
+_, err = utils.DB.Exec(`
+INSERT INTO projects (project_id, user_id, style, project_status, create_time, update_time)
+VALUES (?, ?, ?, 'generating', NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_time=NOW()
+`, req.ProjectID, req.UserID, req.Style)
+if err != nil {
+log.Printf("写入项目表（音频）失败 | 项目ID: %s | 错误: %v", req.ProjectID, err)
+} else {
+log.Printf("写入项目表（音频）成功 | 项目ID: %s", req.ProjectID)
+}
+}
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": aiResp, // 自动适配AI Server的audio_url格式
+"msg":  "音频生成任务已提交至AI Server",
+})
+}
+
+func ListShots(c *gin.Context) {
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": nil,
+"msg":  "分镜列表查询接口（可扩展数据库查询逻辑）",
+})
+}
+
+func ListProjects(c *gin.Context) {
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": nil,
+"msg":  "项目列表查询接口（可扩展数据库查询逻辑）",
+})
+}

@@ -1,0 +1,279 @@
+package handler
+
+import (
+"fmt"
+
+"story2video_server/utils"
+
+"github.com/gin-gonic/gin"
+)
+
+func GenerateStory(c *gin.Context) {
+type GenerateStoryReq struct {
+ProjectID string `json:"project_id" binding:"required"`
+RawStory  string `json:"raw_story" binding:"required"`
+Style     string `json:"style" binding:"required"`
+UserID    string `json:"user_id" binding:"required"`
+}
+
+var req GenerateStoryReq
+if err := c.ShouldBindJSON(&req); err != nil {
+// 添加错误日志
+gin.Errorf("解析请求参数失败: %v | 请求参数: %+v", err, req)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+// 添加日志：记录解析后的请求参数
+gin.Debugf("解析请求参数成功 | 项目ID: %s | 故事内容: %s | 风格: %s | 用户ID: %s",
+req.ProjectID, req.RawStory, req.Style, req.UserID)
+
+// 组装要发给AI Server的参数
+type AISStoryReq struct {
+ProjectID   string `json:"project_id"`
+RawStory    string `json:"raw_story"`
+Style       string `json:"style"`
+CallbackURL string `json:"callback_url"`
+}
+aiReq := AISStoryReq{
+ProjectID:   req.ProjectID,
+RawStory:    req.RawStory,
+Style:       req.Style,
+CallbackURL: "http://127.0.0.1:8080/api/callback/story/result",
+}
+
+// 添加日志：记录发送给AI Server的参数
+gin.Debugf("准备调用AI Server | AI接口路径: /api/generate/story | 请求参数: %+v", aiReq)
+
+// 关键修改：用map[string]interface{}接收AI Server的原始返回（适配任意结构）
+var aiResp map[string]interface{}
+err := utils.PostJSON("/api/generate/story", aiReq, &aiResp)
+if err != nil {
+// 添加错误日志：记录调用AI Server失败的详情
+gin.Errorf("调用AI Server失败 | 接口路径: /api/generate/story | 请求参数: %+v | 错误: %v", aiReq, err)
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "调用AI Server失败: " + err.Error(),
+})
+return
+}
+
+// 添加日志：记录AI Server的原始响应
+gin.Debugf("调用AI Server成功 | 原始返回数据: %+v", aiResp)
+
+// 写入数据库（兼容utils.DB已初始化）
+if utils.DB != nil {
+_, err = utils.DB.Exec(`
+INSERT INTO projects (project_id, user_id, raw_story, style, project_status, create_time, update_time)
+VALUES (?, ?, ?, ?, 'generating', NOW(), NOW())
+ON DUPLICATE KEY UPDATE update_time=NOW()
+`, req.ProjectID, req.UserID, req.RawStory, req.Style)
+if err != nil {
+gin.Errorf("写入项目表失败 | 项目ID: %s | 错误: %v", req.ProjectID, err)
+} else {
+gin.Debugf("写入项目表成功 | 项目ID: %s", req.ProjectID)
+}
+}
+
+// 透传AI Server的原始数据返回给客户端
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": aiResp,
+"msg":  "故事生成任务已提交至AI Server",
+})
+}
+
+func GenerateImages(c *gin.Context) {
+type GenerateImagesReq struct {
+ProjectID string `json:"project_id" binding:"required"`
+SceneID   string `json:"scene_id" binding:"required"`
+Style     string `json:"style" binding:"required"`
+UserID    string `json:"user_id" binding:"required"`
+}
+
+var req GenerateImagesReq
+if err := c.ShouldBindJSON(&req); err != nil {
+gin.Errorf("解析图片生成请求参数失败: %v | 请求参数: %+v", err, req)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+gin.Debugf("解析图片生成请求参数成功 | 项目ID: %s | 场景ID: %s | 风格: %s | 用户ID: %s",
+req.ProjectID, req.SceneID, req.Style, req.UserID)
+
+type AIImageReq struct {
+ProjectID string `json:"project_id"`
+SceneID   string `json:"scene_id"`
+Style     string `json:"style"`
+CallbackURL string `json:"callback_url"`
+}
+aiReq := AIImageReq{
+ProjectID:   req.ProjectID,
+SceneID:     req.SceneID,
+Style:       req.Style,
+CallbackURL: "http://127.0.0.1:8080/api/callback/image/result",
+}
+
+gin.Debugf("准备调用AI Server生成图片 | AI接口路径: /api/generate/image | 请求参数: %+v", aiReq)
+
+var aiResp map[string]interface{}
+err := utils.PostJSON("/api/generate/image", aiReq, &aiResp)
+if err != nil {
+gin.Errorf("调用AI Server生成图片失败 | 接口路径: /api/generate/image | 请求参数: %+v | 错误: %v", aiReq, err)
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "调用AI Server生成图片失败: " + err.Error(),
+})
+return
+}
+
+gin.Debugf("调用AI Server生成图片成功 | 原始返回数据: %+v", aiResp)
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": aiResp,
+"msg":  "图片生成任务已提交至AI Server",
+})
+}
+
+func GenerateVideos(c *gin.Context) {
+type GenerateVideosReq struct {
+ProjectID string `json:"project_id" binding:"required"`
+Style     string `json:"style" binding:"required"`
+UserID    string `json:"user_id" binding:"required"`
+}
+
+var req GenerateVideosReq
+if err := c.ShouldBindJSON(&req); err != nil {
+gin.Errorf("解析视频生成请求参数失败: %v | 请求参数: %+v", err, req)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+gin.Debugf("解析视频生成请求参数成功 | 项目ID: %s | 风格: %s | 用户ID: %s",
+req.ProjectID, req.Style, req.UserID)
+
+type AIVideoReq struct {
+ProjectID   string `json:"project_id"`
+Style       string `json:"style"`
+CallbackURL string `json:"callback_url"`
+}
+aiReq := AIVideoReq{
+ProjectID:   req.ProjectID,
+Style:       req.Style,
+CallbackURL: "http://127.0.0.1:8080/api/callback/video/result",
+}
+
+gin.Debugf("准备调用AI Server生成视频 | AI接口路径: /api/generate/video | 请求参数: %+v", aiReq)
+
+var aiResp map[string]interface{}
+err := utils.PostJSON("/api/generate/video", aiReq, &aiResp)
+if err != nil {
+gin.Errorf("调用AI Server生成视频失败 | 接口路径: /api/generate/video | 请求参数: %+v | 错误: %v", aiReq, err)
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "调用AI Server生成视频失败: " + err.Error(),
+})
+return
+}
+
+gin.Debugf("调用AI Server生成视频成功 | 原始返回数据: %+v", aiResp)
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": aiResp,
+"msg":  "视频生成任务已提交至AI Server",
+})
+}
+
+func ListShots(c *gin.Context) {
+// 简化版查询接口，可根据实际需求扩展
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": nil,
+"msg":  "分镜列表查询接口（可扩展数据库查询逻辑）",
+})
+}
+
+func ListProjects(c *gin.Context) {
+// 简化版查询接口，可根据实际需求扩展
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": nil,
+"msg":  "项目列表查询接口（可扩展数据库查询逻辑）",
+})
+}
+
+func StoryResultCallback(c *gin.Context) {
+// AI Server故事生成完成后的回调接口
+var callbackData map[string]interface{}
+if err := c.ShouldBindJSON(&callbackData); err != nil {
+gin.Errorf("解析故事回调参数失败: %v", err)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"msg":  "参数错误",
+})
+return
+}
+
+gin.Debugf("接收AI Server故事回调 | 数据: %+v", callbackData)
+// 可扩展：将回调数据写入数据库等逻辑
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"msg":  "回调接收成功",
+})
+}
+
+func ImageResultCallback(c *gin.Context) {
+// AI Server图片生成完成后的回调接口
+var callbackData map[string]interface{}
+if err := c.ShouldBindJSON(&callbackData); err != nil {
+gin.Errorf("解析图片回调参数失败: %v", err)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"msg":  "参数错误",
+})
+return
+}
+
+gin.Debugf("接收AI Server图片回调 | 数据: %+v", callbackData)
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"msg":  "回调接收成功",
+})
+}
+
+func VideoResultCallback(c *gin.Context) {
+// AI Server视频生成完成后的回调接口
+var callbackData map[string]interface{}
+if err := c.ShouldBindJSON(&callbackData); err != nil {
+gin.Errorf("解析视频回调参数失败: %v", err)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"msg":  "参数错误",
+})
+return
+}
+
+gin.Debugf("接收AI Server视频回调 | 数据: %+v", callbackData)
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"msg":  "回调接收成功",
+})
+}

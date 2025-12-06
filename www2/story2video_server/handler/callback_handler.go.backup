@@ -1,0 +1,66 @@
+package handler
+
+import (
+"log"
+"net/http"
+
+"github.com/gin-gonic/gin"
+)
+
+// 故事生成回调
+func StoryResultCallback(c *gin.Context) {
+var callbackData map[string]interface{}
+if err := c.ShouldBindJSON(&callbackData); err != nil {
+log.Printf("解析故事回调参数失败: %v", err)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"msg":  "参数错误",
+})
+return
+}
+
+log.Printf("接收AI Server故事回调 | 数据: %+v", callbackData)
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"msg":  "回调接收成功",
+})
+}
+
+// 图片生成回调
+func ImageResultCallback(c *gin.Context) {
+var callbackData map[string]interface{}
+if err := c.ShouldBindJSON(&callbackData); err != nil {
+log.Printf("解析图片回调参数失败: %v", err)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"msg":  "参数错误",
+})
+return
+}
+
+log.Printf("接收AI Server图片回调 | 数据: %+v", callbackData)
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"msg":  "回调接收成功",
+})
+}
+
+// 音频生成回调（新增）
+func AudioResultCallback(c *gin.Context) {
+var callbackData map[string]interface{}
+if err := c.ShouldBindJSON(&callbackData); err != nil {
+log.Printf("解析音频回调参数失败: %v", err)
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"msg":  "参数错误",
+})
+return
+}
+
+log.Printf("接收AI Server音频回调 | 数据: %+v", callbackData)
+// 适配AI Server的audio_url格式，可扩展写入数据库逻辑
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"msg":  "回调接收成功",
+})
+}

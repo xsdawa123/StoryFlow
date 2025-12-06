@@ -1,0 +1,44 @@
+nohup: ignoring input
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+配置文件初始化成功
+2025-12-04T20:11:14.106+0800	info	utils/logger.go:69	日志初始化成功	{"log_file": "logs/story2video.log"}
+2025-12-04T20:11:14.130+0800	info	db/db.go:63	数据库连接成功	{"host": "rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com", "dbname": "db_story2video"}
+[GIN-debug] POST   /api/client/story/generate --> story2video_server/handler.GenerateStory (4 handlers)
+[GIN-debug] GET    /api/client/story/result  --> story2video_server/handler.QueryStoryResult (4 handlers)
+[GIN-debug] POST   /api/client/image/generate --> story2video_server/handler.GenerateImage (4 handlers)
+[GIN-debug] GET    /api/client/image/result  --> story2video_server/handler.QueryImageResult (4 handlers)
+[GIN-debug] POST   /api/client/video/generate --> story2video_server/handler.GenerateVideo (4 handlers)
+[GIN-debug] GET    /api/client/video/result  --> story2video_server/handler.QueryVideoResult (4 handlers)
+[GIN-debug] GET    /api/client/project/list  --> story2video_server/handler.QueryProjectList (4 handlers)
+[GIN-debug] POST   /api/client/project/delete --> story2video_server/handler.DeleteProject (4 handlers)
+[GIN-debug] POST   /api/callback/story       --> story2video_server/handler.StoryCallback (4 handlers)
+[GIN-debug] POST   /api/callback/image       --> story2video_server/handler.ImageCallback (4 handlers)
+[GIN-debug] POST   /api/callback/video       --> story2video_server/handler.VideoCallback (4 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :8080
+2025-12-04T20:12:55.004+0800	info	handler/client_handler.go:13	收到分镜生成请求
+[GIN] 2025/12/04 - 20:12:55 | 200 |     414.646µs |       127.0.0.1 | POST     "/api/client/story/generate"
+[GIN] 2025/12/04 - 20:15:29 | 204 |      81.574µs |   59.64.129.176 | OPTIONS  "/api/client/story/generate"
+2025-12-04T20:15:29.490+0800	info	handler/client_handler.go:13	收到分镜生成请求
+[GIN] 2025/12/04 - 20:15:29 | 200 |     399.101µs |   59.64.129.176 | POST     "/api/client/story/generate"
+2025-12-04T20:15:31.526+0800	info	handler/callback_handler.go:13	收到AI Server分镜回调请求
+2025-12-04T20:15:31.526+0800	info	handler/callback_handler.go:30	分镜回调处理完成	{"task_id": "story_task_test_proj_001_18ab2dfa", "status": "completed"}
+[GIN] 2025/12/04 - 20:15:31 | 200 |     315.787µs |  39.105.112.239 | POST     "/api/callback/story"
+[GIN] 2025/12/04 - 20:15:37 | 204 |      12.297µs |   59.64.129.176 | OPTIONS  "/api/client/image/generate"
+2025-12-04T20:15:37.817+0800	info	handler/client_handler.go:71	收到图片生成请求
+[GIN] 2025/12/04 - 20:15:37 | 200 |    1.005341ms |   59.64.129.176 | POST     "/api/client/image/generate"
+2025-12-04T20:15:39.862+0800	info	handler/callback_handler.go:40	收到AI Server图片回调请求
+2025-12-04T20:15:39.862+0800	info	handler/callback_handler.go:56	图片回调处理完成	{"image_task_id": "image_task_story_task_test_proj_001_18ab2dfa_9acd7327", "status": "completed"}
+[GIN] 2025/12/04 - 20:15:39 | 200 |     336.763µs |  39.105.112.239 | POST     "/api/callback/image"
+[GIN] 2025/12/04 - 20:15:42 | 204 |      10.137µs |   59.64.129.176 | OPTIONS  "/api/client/story/result?task_id=story_task_test_proj_001_18ab2dfa"
+2025-12-04T20:15:42.383+0800	info	handler/client_handler.go:41	收到分镜结果查询请求
+[GIN] 2025/12/04 - 20:15:42 | 200 |     154.854µs |   59.64.129.176 | GET      "/api/client/story/result?task_id=story_task_test_proj_001_18ab2dfa"
+[GIN] 2025/12/04 - 20:15:45 | 204 |      68.777µs |   59.64.129.176 | OPTIONS  "/api/client/image/result?image_task_id=image_task_story_task_test_proj_001_18ab2dfa_9acd7327"
+2025-12-04T20:15:45.218+0800	info	handler/client_handler.go:98	收到图片结果查询请求
+[GIN] 2025/12/04 - 20:15:45 | 200 |     137.641µs |   59.64.129.176 | GET      "/api/client/image/result?image_task_id=image_task_story_task_test_proj_001_18ab2dfa_9acd7327"

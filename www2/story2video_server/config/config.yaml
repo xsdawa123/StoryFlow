@@ -1,0 +1,7 @@
+# 数据库配置
+DB:
+  DSN: "User1111:User1111@tcp(rm-2zen0c30b4hlg3i7n.mysql.rds.aliyuncs.com:3306)/db_story2video?charset=utf8mb4&parseTime=True&loc=Local"
+
+# 服务配置
+Server:
+  Port: ":8080"

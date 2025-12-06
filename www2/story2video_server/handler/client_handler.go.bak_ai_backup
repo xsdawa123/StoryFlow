@@ -1,0 +1,359 @@
+package handler
+
+import (
+"fmt"
+"math/rand"
+"net/http"
+"time"
+"story2video_server/db"
+"story2video_server/model"
+"story2video_server/utils"
+"github.com/gin-gonic/gin"
+"go.uber.org/zap"
+"database/sql"
+)
+
+// -------------------------- 客户端接口：生成故事 --------------------------
+func GenerateStory(c *gin.Context) {
+	// 1. 定义客户端请求参数结构
+	type GenerateStoryReq struct {
+		ProjectID string `json:"project_id" binding:"required"`
+		RawStory  string `json:"raw_story" binding:"required"`
+		Style     string `json:"style" binding:"required"`
+		UserID    string `json:"user_id" binding:"required"`
+	}
+
+	// 2. 绑定并校验客户端参数
+	var req GenerateStoryReq
+	if err := c.ShouldBindJSON(&req); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code": 400,
+			"data": nil,
+			"msg":  "参数错误: " + err.Error(),
+		})
+		return
+	}
+
+	// 3. 构造AI Server请求参数（含回调地址）
+	type AISStoryReq struct {
+		ProjectID   string `json:"project_id"`
+		RawStory    string `json:"raw_story"`
+		Style       string `json:"style"`
+		CallbackURL string `json:"callback_url"` // 告诉AI Server回调你的接口
+	}
+	aiReq := AISStoryReq{
+		ProjectID:   req.ProjectID,
+		RawStory:    req.RawStory,
+		Style:       req.Style,
+		CallbackURL: "http://127.0.0.1:8080/api/callback/story/result",
+	}
+
+	// 4. 调用AI Server的故事生成接口
+	type AIResp struct {
+		Code int         `json:"code"`
+		Data interface{} `json:"data"`
+		Msg  string      `json:"msg"`
+	}
+	var aiResp AIResp
+	err := utils.PostJSON("/ai/story/generate", aiReq, &aiResp)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": 500,
+			"data": nil,
+			"msg":  "调用AI Server失败: " + err.Error(),
+		})
+		return
+	}
+
+	// 5. 处理AI Server响应
+	if aiResp.Code != 0 {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code": 500,
+			"data": nil,
+			"msg":  "AI Server处理失败: " + aiResp.Msg,
+		})
+		return
+	}
+
+	// 6. 返回结果给客户端
+	c.JSON(http.StatusOK, gin.H{
+		"code": 0,
+		"data": aiResp.Data,
+		"msg":  "故事生成任务已提交至AI Server",
+	})
+}
+// -------------------------- 客户端接口：生成分镜图片 --------------------------
+string            `json:"project_id" binding:"required"`
+// -------------------------- 客户端接口：生成视频 --------------------------
+func GenerateVideos(c *gin.Context) {
+type VideoShotReq struct {
+ShotID      string  `json:"shot_id" binding:"required"`
+ImageTaskID string  `json:"image_task_id" binding:"required"`
+Style       string  `json:"style" binding:"required"`
+Duration    float64 `json:"duration" binding:"required"`
+}
+
+type GenerateVideosReq struct {
+ProjectID string              `json:"project_id" binding:"required"`
+Shots     map[string]VideoShotReq `json:"shots" binding:"required"`
+}
+
+var req GenerateVideosReq
+if err := c.ShouldBindJSON(&req); err != nil {
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "参数错误: " + err.Error(),
+})
+return
+}
+
+// 写入 video_tasks 表
+now := time.Now().Format("2006-01-02 15:04:05")
+tx, err := db.DB.Begin()
+if err != nil {
+utils.Logger.Error("开启事务失败", zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "开启事务失败",
+})
+return
+}
+
+videoTaskIDs := make(map[string]string)
+for shotKey, shot := range req.Shots {
+videoTaskID := fmt.Sprintf("video_task_%s_%s", req.ProjectID, shot.ShotID)
+videoTaskIDs[shot.ShotID] = videoTaskID
+
+_, err := tx.Exec(`
+INSERT INTO video_tasks (video_task_id, project_id, shot_id, image_task_id, style, duration, status, create_time, update_time)
+VALUES (?, ?, ?, ?, ?, ?, 'generating', ?, ?)
+ON DUPLICATE KEY UPDATE 
+style=VALUES(style), duration=VALUES(duration), status='generating', update_time=?
+`, videoTaskID, req.ProjectID, shot.ShotID, shot.ImageTaskID, shot.Style, shot.Duration, now, now, now)
+if err != nil {
+tx.Rollback()
+utils.Logger.Error(fmt.Sprintf("写入视频任务%s失败", shotKey), zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  fmt.Sprintf("写入视频任务%s失败", shotKey),
+})
+return
+}
+}
+
+tx.Commit()
+videoTaskID := fmt.Sprintf("video_task_%s_%d", req.ProjectID, rand.Intn(10000))
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": gin.H{
+"video_task_id": videoTaskID,
+"project_id":    req.ProjectID,
+"shot_ids":      videoTaskIDs,
+},
+"msg": "视频生成任务已提交",
+})
+}
+
+// -------------------------- 客户端接口：查询分镜列表（修复NULL值扫描问题） --------------------------
+func ListShots(c *gin.Context) {
+projectID := c.Query("project_id")
+if projectID == "" {
+c.JSON(http.StatusBadRequest, gin.H{
+"code": 400,
+"data": nil,
+"msg":  "project_id不能为空",
+})
+return
+}
+
+// 1. 查询项目基本信息（获取status）
+var projectStatus string
+err := db.DB.QueryRow(`
+SELECT project_status FROM projects WHERE project_id=?
+`, projectID).Scan(&projectStatus)
+if err != nil {
+if err == sql.ErrNoRows {
+// 无该项目记录，返回0码+空数据
+type ProjectData struct {
+Id           string        `json:"id"`
+Name         string        `json:"name"`
+Storyboards  []interface{} `json:"storyboards"`
+}
+type ListShotsResp struct {
+Code int `json:"code"`
+Data struct {
+Status      string      `json:"status"`
+ProjectData ProjectData `json:"project_data"`
+} `json:"data"`
+Msg string `json:"msg"`
+}
+resp := ListShotsResp{
+Code: 0,
+Msg:  "暂无该项目的分镜数据",
+}
+resp.Data.Status = "empty"
+resp.Data.ProjectData = ProjectData{
+Id:          projectID,
+Name:        "项目名称",
+Storyboards: []interface{}{},
+}
+c.JSON(http.StatusOK, resp)
+return
+}
+// 其他数据库错误，返回500
+utils.Logger.Error("查询项目状态失败", zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "查询项目状态失败",
+})
+return
+}
+
+// 2. 查询分镜数据
+rows, err := db.DB.Query(`
+SELECT shot_id, scene_title, prompt, transition, image_url
+FROM shots WHERE project_id=?
+`, projectID)
+if err != nil {
+utils.Logger.Error("查询分镜失败", zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "查询分镜失败",
+})
+return
+}
+defer rows.Close()
+
+// 3. 转换为前端期望的Storyboard数组格式（修复NULL值扫描）
+type Storyboard struct {
+ShotId          string `json:"shotId"`
+SceneTitle      string `json:"sceneTitle"`
+Prompt          string `json:"prompt"`
+Narration       string `json:"narration"` // 固定字符串
+LocalImagePath  string `json:"localImagePath"`
+Status          string `json:"status"` // 固定为generated
+Transition      string `json:"transition"`
+}
+var storyboards []Storyboard
+for rows.Next() {
+// 关键修复：用sql.NullString接收image_url，处理NULL值
+var shotId, sceneTitle, prompt, transition string
+var imageUrl sql.NullString // 替换普通string为sql.NullString
+
+// 扫描数据（注意字段顺序和数量匹配）
+err := rows.Scan(&shotId, &sceneTitle, &prompt, &transition, &imageUrl)
+if err != nil {
+utils.Logger.Error("解析分镜数据失败", zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "解析分镜数据失败",
+})
+return
+}
+
+// 处理NULL值：如果imageUrl为NULL，设为空字符串
+imageUrlStr := ""
+if imageUrl.Valid {
+imageUrlStr = imageUrl.String
+}
+
+storyboards = append(storyboards, Storyboard{
+ShotId:         shotId,
+SceneTitle:     sceneTitle,
+Prompt:         prompt,
+Narration:      "这是分镜的默认旁白文字", // 固定字符串
+LocalImagePath: imageUrlStr, // 使用处理后的字符串
+Status:         "generated", // 固定状态
+Transition:     transition,
+})
+}
+
+// 4. 组装前端期望的完整响应格式
+type ProjectData struct {
+Id           string        `json:"id"`
+Name         string        `json:"name"` // 固定项目名称
+Storyboards  []Storyboard  `json:"storyboards"`
+}
+type ListShotsResp struct {
+Code int `json:"code"`
+Data struct {
+Status      string      `json:"status"`
+ProjectData ProjectData `json:"project_data"`
+} `json:"data"`
+Msg string `json:"msg"`
+}
+
+resp := ListShotsResp{
+Code: 0,
+Msg:  "分镜查询成功",
+}
+resp.Data.Status = projectStatus // 项目状态（来自projects表）
+resp.Data.ProjectData = ProjectData{
+Id:          projectID,
+Name:        "项目名称",
+Storyboards: storyboards,
+}
+
+c.JSON(http.StatusOK, resp)
+}
+
+// -------------------------- 客户端接口：查询项目列表 --------------------------
+func ListProjects(c *gin.Context) {
+userID := c.Query("user_id")
+
+query := `
+SELECT project_id, raw_story, style, project_status, create_time, update_time
+FROM projects
+`
+var args []interface{}
+if userID != "" {
+query += " WHERE user_id=?"
+args = append(args, userID)
+}
+
+rows, err := db.DB.Query(query, args...)
+if err != nil {
+utils.Logger.Error("查询项目失败", zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "查询项目失败",
+})
+return
+}
+defer rows.Close()
+
+var projects []model.Project
+for rows.Next() {
+var project model.Project
+err := rows.Scan(
+&project.ProjectID, &project.RawStory, &project.Style,
+&project.ProjectStatus, &project.CreateTime, &project.UpdateTime,
+)
+if err != nil {
+utils.Logger.Error("解析项目数据失败", zap.Error(err))
+c.JSON(http.StatusInternalServerError, gin.H{
+"code": 500,
+"data": nil,
+"msg":  "解析项目数据失败",
+})
+return
+}
+projects = append(projects, project)
+}
+
+c.JSON(http.StatusOK, gin.H{
+"code": 0,
+"data": gin.H{
+"projects": projects,
+"total":    len(projects),
+},
+"msg": "项目列表查询成功",
+})
+}

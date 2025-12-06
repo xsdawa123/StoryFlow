@@ -1,0 +1,9 @@
+{"code":400,"data":null,"msg":"参数错误: EOF"}--_curl_--
+>   "project_id": "test_proj_10000"
+--_curl_--
+>   "user_id": "user_3300627222"
+--_curl_--
+>   "RawStory": "勇敢的骑士在森林中冒险"
+--_curl_--
+>   "Style": "fantasy"
+> 

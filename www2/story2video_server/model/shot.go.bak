@@ -1,0 +1,15 @@
+package model
+
+import "time"
+
+// Shot 映射RDS的shots表（分镜表）
+type Shot struct {
+ShotID      string    `gorm:"column:shot_id;primaryKey;type:varchar(64);not null" json:"shot_id"`
+ProjectID   string    `gorm:"column:project_id;type:varchar(64);not null" json:"project_id"`
+ShotContent string    `gorm:"column:shot_content;type:text;not null" json:"shot_content"`
+CreateTime  time.Time `gorm:"column:create_time;type:datetime;not null;default:CURRENT_TIMESTAMP" json:"create_time"`
+}
+
+func (Shot) TableName() string {
+return "shots"
+}

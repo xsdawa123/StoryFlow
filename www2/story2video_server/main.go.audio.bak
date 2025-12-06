@@ -1,0 +1,45 @@
+package main
+
+import (
+"story2video_server/handler"
+
+"github.com/gin-gonic/gin"
+)
+
+func main() {
+// 创建Gin引擎
+r := gin.Default()
+
+// 注册API路由组
+api := r.Group("/api")
+{
+// 客户端请求路由组
+client := api.Group("/client")
+{
+// 故事生成接口
+client.POST("/story/generate", handler.GenerateStory)
+// 图片生成接口（新增：解决404的核心）
+client.POST("/image/generate", handler.GenerateImages)
+// 视频生成接口（新增）
+client.POST("/video/generate", handler.GenerateVideos)
+// 分镜列表查询
+client.GET("/shots/list", handler.ListShots)
+// 项目列表查询
+client.GET("/projects/list", handler.ListProjects)
+}
+
+// AI Server回调路由组
+callback := api.Group("/callback")
+{
+callback.POST("/story/result", handler.StoryResultCallback)
+callback.POST("/image/result", handler.ImageResultCallback)
+callback.POST("/video/result", handler.VideoResultCallback)
+}
+}
+
+// 启动服务，监听8080端口
+err := r.Run(":8080")
+if err != nil {
+panic("服务启动失败: " + err.Error())
+}
+}
